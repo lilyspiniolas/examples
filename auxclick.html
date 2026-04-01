@@ -2,8 +2,19 @@
 <html>
 <head>
 	<style>
+		html, body {
+			margin:0px;
+		}
+		html {
+			background: #ff5991;
+		}
+
 		body {
-			background: rgb(200, 0, 0);
+			height:2000px;
+			width:3500px;
+			padding-top: 0.1px;
+			background: #ff5991;
+			background: linear-gradient(-45deg, rgba(255, 89, 145, 1) 0%, rgba(255, 132, 0, 1) 100%);
 		}
 
 		p {
@@ -14,11 +25,25 @@
 			display: inline-block;
 		}
 
+		.log-wrapper {
+			position: fixed;
+			top: 10px;
+			left: 20px;
+			pointer-events: none;
+		}
+
 		.log-container {
 			background: black;
 			display: inline-block;
+			vertical-align: top;
 			padding-left: 10px;
 			padding-right: 10px;
+			margin-right: 20px;
+			pointer-events: none;
+		}
+
+		.log-container * {
+			pointer-events: none;
 		}
 
 		.property {
@@ -33,21 +58,123 @@
 		.property-value-alt {
 			background: blue;
 		}
+
+		#end-marker {
+			position: absolute;
+			top:1950px;
+			left:3450px;
+			width:50px;
+			height:50px;
+			background:blue;
+		}
+		#end-marker {
+			text-align: center;
+		}
+		#pad {
+			margin-top:20px;
+			background: white;
+			width: 800px;
+			height: 350px;
+			margin-left:20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		#pad p {
+			color: black;
+			font-weight: 500;
+		}
+		select {
+			font-size:16px;
+		}
+		.controls {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+			margin: 500px 0 0 20px;
+		}
+		.controls label {
+			font-family: -apple-system;
+			font-size: 14px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			cursor: pointer;
+		}
+		input[type=checkbox] {
+			width:18px;
+			height:18px;
+		}
 	</style>
 	<script src="script.js"></script>
 </head>
 <body>
-	<div class="log-container">
-		<p id='log'>Auxclick</p>
+	<div class="log-wrapper">
+		<div class="log-container">
+			<p id='mouselog'>mouse</p>
+		</div>
+		<div class="log-container">
+			<p id='pointerlog'>pointer</p>
+		</div>
+	</div>
+	<div id="end-marker">
+		<p>End</p>
+	</div>
+	<div class="controls">
+		<select id="target-select">
+			<option value="document">Document</option>
+			<option value="window">Window</option>
+			<option value="body">Body</option>
+			<option value="pad">Event Pad</option>
+		</select>
+		<select id="event-select">
+			<option value="auxclick">auxclick</option>
+			<option value="dblclick">dblclick</option>
+		</select>
+		<label>
+			<input type="checkbox" id="prevent-context" checked>
+			Prevent context menu
+		</label>
+	</div>
+	<div id="pad">
+		<p>Event pad</p>
 	</div>
 </body>
 <script>
+	const preventContextCheckbox = document.getElementById("prevent-context");
 	document.addEventListener("contextmenu", (e) => {
-		e.preventDefault();
+		if (preventContextCheckbox.checked) e.preventDefault();
 	})
-	document.addEventListener("auxclick", (e) => {
-		logMouseEvent(e, log);
-		formatMouseEventLog(log);
-	})
+
+	const targets = {
+		document: document,
+		window: window,
+		body: document.body,
+		pad: document.getElementById("pad")
+	};
+
+	function eventHandler(e) {
+		logMouseEvent(e, mouselog);
+		logPointerEvent(e, pointerlog);
+		formatEventLog(mouselog);
+		formatEventLog(pointerlog);
+	}
+
+	let currentTarget = document;
+	let currentEvent = "auxclick";
+	currentTarget.addEventListener(currentEvent, eventHandler);
+
+	const targetSelect = document.getElementById("target-select");
+	const eventSelect = document.getElementById("event-select");
+
+	function rebindListener() {
+		currentTarget.removeEventListener(currentEvent, eventHandler);
+		currentTarget = targets[targetSelect.value];
+		currentEvent = eventSelect.value;
+		currentTarget.addEventListener(currentEvent, eventHandler);
+	}
+
+	targetSelect.addEventListener("change", rebindListener);
+	eventSelect.addEventListener("change", rebindListener);
 </script>
 </html>

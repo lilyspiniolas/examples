@@ -17,7 +17,23 @@ function logMouseEvent(e, element) {
         "MouseEvent.y: " + e.y + "\n"
 }
 
-function formatMouseEventLog(element) {
+function logPointerEvent(e, element) {
+    element.innerText = "PointerEvent.altitudeAngle: " + e.altitudeAngle + "\n" +
+        "PointerEvent.azimuthAngle: " + e.azimuthAngle + "\n" +
+        "PointerEvent.persistentDeviceId: " + e.persistentDeviceId + "\n" +
+        "PointerEvent.pointerId: " + e.pointerId + "\n" +
+        "PointerEvent.width: " + e.width + "\n" +
+        "PointerEvent.height: " + e.height + "\n" +
+        "PointerEvent.pressure: " + e.pressure + "\n" +
+        "PointerEvent.tangentialPressure: " + e.tangentialPressure + "\n" +
+        "PointerEvent.tiltX: " + e.tiltX + "\n" +
+        "PointerEvent.tiltY: " + e.tiltY + "\n" +
+        "PointerEvent.twist: " + e.twist + "\n" +
+        "PointerEvent.pointerType: " + e.pointerType + "\n" +
+        "PointerEvent.isPrimary: " + e.isPrimary + "\n"
+}
+
+function formatEventLog(element) {
     element.innerHTML = element.innerText.split("\n").map((line, j) => {
         let i = line.indexOf(":");
         if (i === -1) return line;
