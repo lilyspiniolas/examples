@@ -10,7 +10,7 @@ function logMouseEvent(e, element) {
         "MouseEvent.offsetCoords: (" + e.offsetX + ", " + e.offsetY + ")" + "\n" +
         "MouseEvent.pageCoords: (" + e.pageX + ", " + e.pageY + ")" + "\n" +
         "MouseEvent.relatedTarget: " + e.relatedTarget + "\n" +
-        "MouseEvent.screenCoords: (" + e.pageX + ", " + e.pageY + ")" + "\n" +
+        "MouseEvent.screenCoords: (" + e.screenX + ", " + e.screenY + ")" + "\n" +
         "MouseEvent.shiftKey: " + e.shiftKey + "\n" +
         "MouseEvent.webkitForce: " + e.webkitForce + "\n" +
         "MouseEvent.x: " + e.x + "\n" +
