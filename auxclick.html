@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body {
+			background: rgb(200, 0, 0);
+		}
+
+		p {
+			color: white;
+			font-family: -apple-system;
+			font-size: 14px;
+			line-height: 18px;
+			display: inline-block;
+		}
+
+		.log-container {
+			background: black;
+			display: inline-block;
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+
+		.property {
+			display: inline-block;
+			min-width: 280px;
+		}
+
+		.property-value {
+			background: green;
+		}
+
+		.property-value-alt {
+			background: blue;
+		}
+	</style>
+	<script src="script.js"></script>
+</head>
+<body>
+	<div class="log-container">
+		<p id='log'>Auxclick</p>
+	</div>
+</body>
+<script>
+	document.addEventListener("contextmenu", (e) => {
+		e.preventDefault();
+	})
+	document.addEventListener("auxclick", (e) => {
+		logMouseEvent(e, log);
+		formatMouseEventLog(log);
+	})
+</script>
+</html>
