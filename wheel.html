@@ -126,7 +126,7 @@
 			<p id='wheellog'>wheel</p>
 		</div>
 		<div class="log-container">
-			<p id='mousewheellog'>mousewheel</p>
+			<p id='mouselog'>mouse</p>
 		</div>
 		<input type="text" id="log-input">
 	</div>
@@ -175,10 +175,10 @@
 	};
 
 	function eventHandler(e) {
-		logWheelEvent(e, wheellog);
-		logMouseWheelEvent(e, mousewheellog);
+		logWheelEventFull(e, wheellog);
+		logMouseEvent(e, mouselog);
 		formatEventLog(wheellog);
-		formatEventLog(mousewheellog);
+		formatEventLog(mouselog);
 	}
 
 	let currentTarget = document;

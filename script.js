@@ -46,6 +46,16 @@ function logMouseWheelEvent(e, element) {
         "wheelDeltaY: " + e.wheelDeltaY + "\n"
 }
 
+function logWheelEventFull(e, element) {
+    element.innerText = "WheelEvent.deltaX: " + e.deltaX + "\n" +
+        "WheelEvent.deltaY: " + e.deltaY + "\n" +
+        "WheelEvent.deltaZ: " + e.deltaZ + "\n" +
+        "WheelEvent.deltaMode: " + e.deltaMode + "\n" +
+        "wheelDelta: " + e.wheelDelta + "\n" +
+        "wheelDeltaX: " + e.wheelDeltaX + "\n" +
+        "wheelDeltaY: " + e.wheelDeltaY + "\n"
+}
+
 function formatEventLog(element) {
     element.innerHTML = element.innerText.split("\n").map((line, j) => {
         let i = line.indexOf(":");
