@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		html, body {
+			margin: 0px;
+		}
+
+		html {
+			background: #f0f0f0;
+		}
+
+		body {
+			height: 2000px;
+			width: 3000px;
+			padding-top: 0.1px;
+			background: #f0f0f0;
+			font-family: -apple-system;
+		}
+
+		p {
+			color: #333;
+			font-size: 14px;
+			line-height: 18px;
+		}
+
+		.controls {
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			background: white;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+			z-index: 1000;
+		}
+
+		.controls select,
+		.controls label {
+			font-family: -apple-system;
+			font-size: 14px;
+		}
+
+		.controls select {
+			padding: 8px;
+			border: 1px solid #999;
+			border-radius: 4px;
+		}
+
+		.controls label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			cursor: pointer;
+		}
+
+		.controls input[type=checkbox] {
+			width: 18px;
+			height: 18px;
+		}
+
+		.content {
+			margin-top: 40px;
+			padding: 20px;
+			max-width: 800px;
+		}
+
+		.test-element {
+			display: inline-block;
+			padding: 20px;
+			margin: 20px;
+			background: #fff;
+			border: 2px solid #333;
+			border-radius: 4px;
+			font-weight: 500;
+			width:500px;
+			height:500px;
+		}
+
+		.onscreen {
+			cursor: url('cursor2.png'), auto;
+		}
+
+		.scrollable {
+			margin-top: 800px;
+			margin-left: auto;
+			cursor: url('cursor3.png'), auto;
+		}
+
+		#offset {
+			position: absolute;
+			left:2000px;
+		}
+
+		body.cursor1-applied {
+			cursor: url('cursor1.png'), auto;
+		}
+
+		html.cursor1-applied {
+			cursor: url('cursor1.png'), auto;
+		}
+
+		:root.cursor1-applied {
+			cursor: url('cursor1.png'), auto;
+		}
+
+		.onscreen {
+			margin-top:400px;
+		}
+	</style>
+</head>
+<body>
+	<div class="controls">
+		<select id="cursor-target">
+			<option value="off">Off</option>
+			<option value="body">Body</option>
+			<option value="html">HTML</option>
+			<option value="root">Root (:root)</option>
+		</select>
+		<label>
+			<input type="checkbox" id="element-cursors" checked>
+			Enable element cursors
+		</label>
+		<label>
+			<input type="checkbox" id="page-cursor" checked>
+			Enable page cursor
+		</label>
+	</div>
+
+	<div class="content">
+		<div class="test-element onscreen">Element 1 (cursor2)</div>
+		<div id="offset" class="test-element scrollable">Element 2 (cursor3)</div>
+	</div>
+
+	<script>
+		const cursorTargetSelect = document.getElementById("cursor-target");
+		const elementCursorsCheckbox = document.getElementById("element-cursors");
+		const pageCursorCheckbox = document.getElementById("page-cursor");
+
+		function updateCursors() {
+			const target = cursorTargetSelect.value;
+			const elementCursorsEnabled = elementCursorsCheckbox.checked;
+			const pageCursorEnabled = pageCursorCheckbox.checked;
+
+			// Remove all cursor1 classes
+			document.documentElement.classList.remove("cursor1-applied");
+			document.body.classList.remove("cursor1-applied");
+
+			// Apply cursor to target
+			if (pageCursorEnabled && target !== "off") {
+				if (target === "body") {
+					document.body.classList.add("cursor1-applied");
+				} else if (target === "html") {
+					document.documentElement.classList.add("cursor1-applied");
+				} else if (target === "root") {
+					document.documentElement.classList.add("cursor1-applied");
+				}
+			}
+
+			// Update element cursors
+			const testElements = document.querySelectorAll(".test-element");
+			testElements.forEach(el => {
+				if (!elementCursorsEnabled) {
+					el.style.cursor = "auto";
+				} else {
+					if (el.classList.contains("onscreen")) {
+						el.style.cursor = "url('cursor2.png'), auto";
+					} else if (el.classList.contains("scrollable")) {
+						el.style.cursor = "url('cursor3.png'), auto";
+					}
+				}
+			});
+		}
+
+		cursorTargetSelect.addEventListener("change", updateCursors);
+		elementCursorsCheckbox.addEventListener("change", updateCursors);
+		pageCursorCheckbox.addEventListener("change", updateCursors);
+
+		// Initial update
+		updateCursors();
+	</script>
+</body>
+</html>
