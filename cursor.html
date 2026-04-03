@@ -128,7 +128,13 @@
 			<input type="checkbox" id="page-cursor" checked>
 			Enable page cursor
 		</label>
+		<label>
+			<input type="checkbox" id="show-iframe">
+			Show reference iframe
+		</label>
 	</div>
+
+	<iframe id="reference-iframe" src="https://lilyspiniolas.github.io/examples/cursor.html" style="display:none;position:absolute;bottom:10px;right:10px;width:800px;height:600px;border:4px solid red;"></iframe>
 
 	<div class="content">
 		<div class="test-element onscreen">Element 1 (cursor2)</div>
@@ -174,6 +180,13 @@
 				}
 			});
 		}
+
+		const showIframeCheckbox = document.getElementById("show-iframe");
+		const referenceIframe = document.getElementById("reference-iframe");
+
+		showIframeCheckbox.addEventListener("change", () => {
+			referenceIframe.style.display = showIframeCheckbox.checked ? "block" : "none";
+		});
 
 		cursorTargetSelect.addEventListener("change", updateCursors);
 		elementCursorsCheckbox.addEventListener("change", updateCursors);
