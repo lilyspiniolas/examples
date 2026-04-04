@@ -207,10 +207,10 @@
 			}
 		});
 
-		const pmLog = document.getElementById('pointermove-log');
+		let pmLog;
 		const ts = () => new Date().toLocaleTimeString('en-US', { hour12: false, fractionalSecondDigits: 3 });
-		window.addEventListener('pointermove', () => { pmLog.children[0].textContent = 'window: ' + ts(); });
-		document.addEventListener('pointermove', () => { pmLog.children[1].textContent = 'document: ' + ts(); });
+		window.addEventListener('pointermove', () => { (pmLog ??= document.getElementById('pointermove-log')).children[0].textContent = 'window: ' + ts(); });
+		document.addEventListener('pointermove', () => { (pmLog ??= document.getElementById('pointermove-log')).children[1].textContent = 'document: ' + ts(); });
 	</script>	<div id="pointermove-log" style="position:fixed;bottom:8px;left:8px;font-family:-apple-system;font-size:11px;color:#333;background:rgba(255,255,255,0.85);padding:4px 6px;border-radius:4px;line-height:1.6;pointer-events:none;">
 		<div>window: —</div>
 		<div>document: —</div>
