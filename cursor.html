@@ -194,6 +194,18 @@
 
 		// Initial update
 		updateCursors();
+
+		let pointerCaptureCount = 0;
+		document.addEventListener('gotpointercapture', () => {
+			pointerCaptureCount++;
+			document.documentElement.style.background = 'blue';
+		});
+		document.addEventListener('lostpointercapture', () => {
+			if (--pointerCaptureCount <= 0) {
+				pointerCaptureCount = 0;
+				document.documentElement.style.background = '';
+			}
+		});
 	</script>
 </body>
 </html>
