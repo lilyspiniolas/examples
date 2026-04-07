@@ -145,6 +145,14 @@
 			<option value="mousewheel">mousewheel</option>
 		</select>
 		<label>
+			<input type="checkbox" id="passive-checkbox">
+			Passive
+		</label>
+		<label>
+			<input type="checkbox" id="prevent-default-checkbox">
+			preventDefault
+		</label>
+		<label>
 			<input type="checkbox" id="pad-overflow">
 			Pad overflow
 		</label>
@@ -174,7 +182,13 @@
 		pad: document.getElementById("pad")
 	};
 
+	const passiveCheckbox = document.getElementById("passive-checkbox");
+	const preventDefaultCheckbox = document.getElementById("prevent-default-checkbox");
+
 	function eventHandler(e) {
+		if (preventDefaultCheckbox.checked) {
+			e.preventDefault();
+		}
 		logWheelEventFull(e, wheellog);
 		logMouseEvent(e, mouselog);
 		formatEventLog(wheellog);
@@ -183,7 +197,8 @@
 
 	let currentTarget = document;
 	let currentEvent = "wheel";
-	currentTarget.addEventListener(currentEvent, eventHandler);
+	let currentPassive = passiveCheckbox.checked;
+	currentTarget.addEventListener(currentEvent, eventHandler, { passive: currentPassive });
 
 	const targetSelect = document.getElementById("target-select");
 	const eventSelect = document.getElementById("event-select");
@@ -192,10 +207,12 @@
 		currentTarget.removeEventListener(currentEvent, eventHandler);
 		currentTarget = targets[targetSelect.value];
 		currentEvent = eventSelect.value;
-		currentTarget.addEventListener(currentEvent, eventHandler);
+		currentPassive = passiveCheckbox.checked;
+		currentTarget.addEventListener(currentEvent, eventHandler, { passive: currentPassive });
 	}
 
 	targetSelect.addEventListener("change", rebindListener);
 	eventSelect.addEventListener("change", rebindListener);
+	passiveCheckbox.addEventListener("change", rebindListener);
 </script>
 </html>
