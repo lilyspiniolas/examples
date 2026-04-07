@@ -14,7 +14,8 @@ function logMouseEvent(e, element) {
         "MouseEvent.shiftKey: " + e.shiftKey + "\n" +
         "MouseEvent.webkitForce: " + e.webkitForce + "\n" +
         "MouseEvent.x: " + e.x + "\n" +
-        "MouseEvent.y: " + e.y + "\n"
+        "MouseEvent.y: " + e.y + "\n" +
+        "Event.cancelable: " + e.cancelable + "\n"
 }
 
 function logPointerEvent(e, element) {
@@ -37,13 +38,15 @@ function logWheelEvent(e, element) {
     element.innerText = "WheelEvent.deltaX: " + e.deltaX + "\n" +
         "WheelEvent.deltaY: " + e.deltaY + "\n" +
         "WheelEvent.deltaZ: " + e.deltaZ + "\n" +
-        "WheelEvent.deltaMode: " + e.deltaMode + "\n"
+        "WheelEvent.deltaMode: " + e.deltaMode + "\n" +
+        "Event.cancelable: " + e.cancelable + "\n"
 }
 
 function logMouseWheelEvent(e, element) {
     element.innerText = "wheelDelta: " + e.wheelDelta + "\n" +
         "wheelDeltaX: " + e.wheelDeltaX + "\n" +
-        "wheelDeltaY: " + e.wheelDeltaY + "\n"
+        "wheelDeltaY: " + e.wheelDeltaY + "\n" +
+        "Event.cancelable: " + e.cancelable + "\n"
 }
 
 function logWheelEventFull(e, element) {
@@ -53,7 +56,8 @@ function logWheelEventFull(e, element) {
         "WheelEvent.deltaMode: " + e.deltaMode + "\n" +
         "wheelDelta: " + e.wheelDelta + "\n" +
         "wheelDeltaX: " + e.wheelDeltaX + "\n" +
-        "wheelDeltaY: " + e.wheelDeltaY + "\n"
+        "wheelDeltaY: " + e.wheelDeltaY + "\n" +
+        "Event.cancelable: " + e.cancelable + "\n"
 }
 
 function formatEventLog(element) {
