@@ -57,13 +57,15 @@
 		wheel: "wheel.html",
 		cursor: "cursor.html"
 	};
-	select.addEventListener("change", () => {
+	function syncPage() {
 		iframe.src = pages[select.value];
 		const isCursor = select.value === "cursor";
 		overlay.style.display = isCursor ? "block" : "none";
 		iframe.style.marginTop = isCursor ? "10dvh" : "";
 		iframe.style.width = isCursor ? "80%" : "";
-	});
+	}
+	select.addEventListener("change", syncPage);
+	syncPage();
 
 	let pointerCaptureCount = 0;
 	document.addEventListener('gotpointercapture', () => {

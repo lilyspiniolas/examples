@@ -192,8 +192,9 @@
 		elementCursorsCheckbox.addEventListener("change", updateCursors);
 		pageCursorCheckbox.addEventListener("change", updateCursors);
 
-		// Initial update
+		// Sync state on load in case Safari restored form values
 		updateCursors();
+		referenceIframe.style.display = showIframeCheckbox.checked ? "block" : "none";
 
 		let pointerCaptureCount = 0;
 		document.addEventListener('gotpointercapture', () => {

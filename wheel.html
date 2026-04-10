@@ -214,5 +214,9 @@
 	targetSelect.addEventListener("change", rebindListener);
 	eventSelect.addEventListener("change", rebindListener);
 	passiveCheckbox.addEventListener("change", rebindListener);
+
+	// Sync state on load in case Safari restored form values
+	rebindListener();
+	pad.style.overflow = padOverflowCheckbox.checked ? "auto" : "hidden";
 </script>
 </html>
