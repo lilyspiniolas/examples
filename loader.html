@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	html, body{
+		padding:0;
+		margin:0;
+	}
+	.large {
+		border:1px solid black;
+		margin-left:1%;
+		width:98%;
+		height:93dvh;
+	}
+	select {
+		margin-left:1%;
+		display:block;
+		height:3dvh;
+		margin-bottom:1dvh;
+	}
+	iframe {
+		display:block;
+	}
+	#cursor-overlay {
+		display:none;
+		position:absolute;
+		top:3dvh;
+		left:600px;
+		width:200px;
+		height:300px;
+		background:white;
+		border:1px solid black;
+		cursor: url('cursor4.png'), auto;
+		z-index:1;
+	}
+</style>
+</head>
+<body>
+	<select>
+		<option value="auxclick">auxclick</option>
+		<option value="wheel">wheel</option>
+		<option value="cursor">cursor</option>
+	</select>
+	<iframe class="large" src="auxclick.html"></iframe>
+	<div id="cursor-overlay"></div>
+	<div id="pointermove-log" style="position:fixed;bottom:8px;left:8px;font-family:-apple-system;font-size:11px;color:#333;background:rgba(255,255,255,0.85);padding:4px 6px;border-radius:4px;line-height:1.6;pointer-events:none;">
+		<div>window: —</div>
+		<div>document: —</div>
+	</div>
+</body>
+<script>
+	const select = document.querySelector("select");
+	const iframe = document.querySelector("iframe");
+	const overlay = document.getElementById("cursor-overlay");
+	const pages = {
+		auxclick: "auxclick.html",
+		wheel: "wheel.html",
+		cursor: "cursor.html"
+	};
+	select.addEventListener("change", () => {
+		iframe.src = pages[select.value];
+		const isCursor = select.value === "cursor";
+		overlay.style.display = isCursor ? "block" : "none";
+		iframe.style.marginTop = isCursor ? "10dvh" : "";
+		iframe.style.width = isCursor ? "80%" : "";
+	});
+
+	let pointerCaptureCount = 0;
+	document.addEventListener('gotpointercapture', () => {
+		pointerCaptureCount++;
+		document.documentElement.style.background = 'blue';
+	});
+	document.addEventListener('lostpointercapture', () => {
+		if (--pointerCaptureCount <= 0) {
+			pointerCaptureCount = 0;
+			document.documentElement.style.background = '';
+		}
+	});
+
+	let pmLog;
+	const ts = () => new Date().toLocaleTimeString('en-US', { hour12: false, fractionalSecondDigits: 3 });
+	window.addEventListener('pointermove', () => { (pmLog ??= document.getElementById('pointermove-log')).children[0].textContent = 'window: ' + ts(); });
+	document.addEventListener('pointermove', () => { (pmLog ??= document.getElementById('pointermove-log')).children[1].textContent = 'document: ' + ts(); });
+</script>
+</html>
