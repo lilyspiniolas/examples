@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+		}
+		html {
+			background: green;
+		}
+		body {
+			width: 3000px;
+			height: 3000px;
+			padding-top: 0.1px;
+			background: linear-gradient(135deg, green 0%, yellow 100%);
+		}
+		#google-iframe {
+			display: none;
+			position: absolute;
+			top: 1000px;
+			left: 400px;
+			width: 300px;
+			height: 600px;
+			border: 1px solid black;
+			z-index: 10;
+		}
+		#scroll2-checkbox {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			z-index: 20;
+		}
+		.overflow-div {
+			position: absolute;
+			overflow: auto;
+			border: 1px solid black;
+			background: rgba(255, 255, 255, 0.8);
+		}
+		#overflow1 {
+			top: 1650px;
+			left: 400px;
+			width: 800px;
+			height: 400px;
+		}
+		#overflow2 {
+			top: 2150px;
+			left: 400px;
+			width: 800px;
+			height: 400px;
+		}
+		#overflow2 textarea {
+			font-size: 24px;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			border: none;
+		}
+	</style>
+</head>
+<body>
+	<label id="scroll2-checkbox">
+		<input type="checkbox" id="toggle-google" checked>
+		Show wikipedia
+	</label>
+	<iframe id="google-iframe" src="https://www.wikipedia.org" style="display: block;"></iframe>
+	<div class="overflow-div" id="overflow1">
+		<div style="padding: 20px; font-size: 20px; line-height: 1.6;">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+		</div>
+	</div>
+	<div class="overflow-div" id="overflow2">
+		<textarea>This is a large textarea with lots of text.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Sed do eiusmod tempor incididunt ut labore et dolore.
+Magna aliqua ut enim ad minim veniam.
+Quis nostrud exercitation ullamco laboris nisi.
+Ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit voluptate.
+Velit esse cillum dolore eu fugiat nulla pariatur.
+Excepteur sint occaecat cupidatat non proident.
+Sunt in culpa qui officia deserunt mollit anim id.
+Est laborum sed ut perspiciatis unde omnis iste.
+Natus error sit voluptatem accusantium doloremque laudantium.
+Totam rem aperiam eaque ipsa quae ab illo inventore.
+Veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut.
+Odit aut fugit sed quia consequuntur magni dolores eos qui.
+Ratione voluptatem sequi nesciunt neque porro quisquam est.
+Qui dolorem ipsum quia dolor sit amet consectetur adipisci.
+Velit sed quia non numquam eius modi tempora incidunt labore.
+Et dolore magnam aliquam quaerat voluptatem ut enim ad.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Sed do eiusmod tempor incididunt ut labore et dolore.
+Magna aliqua ut enim ad minim veniam.
+Quis nostrud exercitation ullamco laboris nisi.
+Ut aliquip ex ea commodo consequat.</textarea>
+	</div>
+	<script>
+		document.getElementById('toggle-google').addEventListener('change', (e) => {
+			const iframe = document.getElementById('google-iframe');
+			if (e.target.checked) {
+				iframe.style.display = 'block';
+			} else {
+				iframe.style.display = 'none';
+			}
+		});
+	</script>
+</body>
+</html>
