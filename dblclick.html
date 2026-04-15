@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+		}
+		#text {
+			font-family: -apple-system;
+			font-size: 32px;
+		}
+	</style>
+</head>
+<body>
+	<div id="text">dblclick</div>
+	<script>
+		document.addEventListener("dblclick", (e) => {
+			document.getElementById("text").textContent = new Date().toLocaleTimeString('en-US', { hour12: false, fractionalSecondDigits: 3 });
+		});
+	</script>
+</body>
+</html>
