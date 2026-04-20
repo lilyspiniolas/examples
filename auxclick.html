@@ -143,8 +143,8 @@
 			<option value="mousedown">mousedown</option>
 		</select>
 		<label>
-			<input type="checkbox" id="prevent-context" checked>
-			Prevent context menu
+			<input type="checkbox" id="prevent-default" checked>
+			Prevent default
 		</label>
 	</div>
 	<div id="pad">
@@ -152,10 +152,7 @@
 	</div>
 </body>
 <script>
-	const preventContextCheckbox = document.getElementById("prevent-context");
-	document.addEventListener("contextmenu", (e) => {
-		if (preventContextCheckbox.checked) e.preventDefault();
-	})
+	const preventDefaultCheckbox = document.getElementById("prevent-default");
 
 	const targets = {
 		document: document,
@@ -165,6 +162,7 @@
 	};
 
 	function eventHandler(e) {
+		if (preventDefaultCheckbox.checked) e.preventDefault();
 		logMouseEvent(e, mouselog);
 		logPointerEvent(e, pointerlog);
 		formatEventLog(mouselog);
