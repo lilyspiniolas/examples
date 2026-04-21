@@ -14,9 +14,10 @@
 	}
 	select {
 		margin-left:1%;
-		display:block;
+		display:inline-block;
 		height:3dvh;
 		margin-bottom:1dvh;
+		margin-right:1%;
 	}
 	iframe {
 		display:block;
@@ -33,39 +34,112 @@
 		cursor: url('cursor4.png'), auto;
 		z-index:1;
 	}
+	#event-rect {
+		display:none;
+		position:absolute;
+		top:5dvh;
+		right:calc(1% + 100px);
+		width:300px;
+		height:800px;
+		background:#88c0d0;
+		border:1px solid black;
+		z-index:2;
+	}
 </style>
 </head>
 <body>
-	<select>
+	<label style="display:inline-block;vertical-align:middle;margin-left:1%;">
+		<input type="checkbox" id="rect-toggle">
+		Show rect
+	</label>
+	<select id="rect-event">
+		<option value="pointerdown">pointerdown</option>
+		<option value="dblclick">dblclick</option>
+		<option value="wheel">wheel</option>
+		<option value="mousedown">mousedown</option>
+	</select>
+	<select id="page-select">
+		<option value="nosite">nosite</option>
 		<option value="auxclick">auxclick</option>
 		<option value="wheel">wheel</option>
 		<option value="cursor">cursor</option>
+		<option value="dblclick">dblclick</option>
+		<option value="scroll1">scroll1</option>
 	</select>
-	<iframe class="large" src="auxclick.html"></iframe>
+	<label style="display:inline-block;vertical-align:middle;">
+		<input type="checkbox" id="pointermove-toggle">
+		Log pointermove
+	</label>
+	<label style="display:inline-block;vertical-align:middle;">
+		<input type="checkbox" id="shift-iframe-toggle">
+		Shift iframe 500px
+	</label>
+	<label style="display:inline-block;vertical-align:middle;">
+		<input type="checkbox" id="sync-toggle" checked>
+		Sync
+	</label>
+	<iframe class="large"></iframe>
 	<div id="cursor-overlay"></div>
+	<div id="event-rect"></div>
 	<div id="pointermove-log" style="position:fixed;bottom:8px;left:8px;font-family:-apple-system;font-size:11px;color:#333;background:rgba(255,255,255,0.85);padding:4px 6px;border-radius:4px;line-height:1.6;pointer-events:none;">
 		<div>window: —</div>
 		<div>document: —</div>
 	</div>
 </body>
 <script>
-	const select = document.querySelector("select");
+	const select = document.getElementById("page-select");
 	const iframe = document.querySelector("iframe");
 	const overlay = document.getElementById("cursor-overlay");
 	const pages = {
-		auxclick: "auxclick.html",
-		wheel: "wheel.html",
-		cursor: "cursor.html"
+		nosite: "",
+		auxclick: "https://lilyspiniolas.github.io/examples/auxclick.html",
+		wheel: "https://lilyspiniolas.github.io/examples/wheel.html",
+		cursor: "https://lilyspiniolas.github.io/examples/cursor.html",
+		dblclick: "https://lilyspiniolas.github.io/examples/dblclick.html",
+		scroll1: "https://lilyspiniolas.github.io/examples/scroll1.html"
 	};
 	function syncPage() {
-		iframe.src = pages[select.value];
+		if (select.value === "nosite") {
+			iframe.removeAttribute("src");
+		} else {
+			iframe.src = pages[select.value];
+		}
 		const isCursor = select.value === "cursor";
 		overlay.style.display = isCursor ? "block" : "none";
 		iframe.style.marginTop = isCursor ? "10dvh" : "";
 		iframe.style.width = isCursor ? "80%" : "";
 	}
-	select.addEventListener("change", syncPage);
-	syncPage();
+	function updatePageParam() {
+		const url = new URL(location.href);
+		url.searchParams.set('page', select.value);
+		history.replaceState(null, '', url);
+	}
+	select.addEventListener("change", () => {
+		syncPage();
+		updatePageParam();
+	});
+	const params = new URLSearchParams(location.search);
+	const initialPage = params.get('page');
+	if (initialPage && pages.hasOwnProperty(initialPage)) {
+		select.value = initialPage;
+	}
+	const syncToggle = document.getElementById('sync-toggle');
+	const syncEnabled = params.get('sync') !== 'false';
+	syncToggle.checked = syncEnabled;
+	if (syncEnabled) {
+		syncPage();
+	} else {
+		iframe.src = pages.auxclick;
+	}
+	syncToggle.addEventListener('change', (e) => {
+		const url = new URL(location.href);
+		if (e.target.checked) {
+			url.searchParams.delete('sync');
+		} else {
+			url.searchParams.set('sync', 'false');
+		}
+		history.replaceState(null, '', url);
+	});
 
 	let pointerCaptureCount = 0;
 	document.addEventListener('gotpointercapture', () => {
@@ -81,7 +155,56 @@
 
 	let pmLog;
 	const ts = () => new Date().toLocaleTimeString('en-US', { hour12: false, fractionalSecondDigits: 3 });
-	window.addEventListener('pointermove', () => { (pmLog ??= document.getElementById('pointermove-log')).children[0].textContent = 'window: ' + ts(); });
-	document.addEventListener('pointermove', () => { (pmLog ??= document.getElementById('pointermove-log')).children[1].textContent = 'document: ' + ts(); });
+
+	const windowHandler = () => { (pmLog ??= document.getElementById('pointermove-log')).children[0].textContent = 'window: ' + ts(); };
+	const documentHandler = () => { (pmLog ??= document.getElementById('pointermove-log')).children[1].textContent = 'document: ' + ts(); };
+
+	let listenersActive = false;
+
+	function toggleListeners(active) {
+		if (active && !listenersActive) {
+			window.addEventListener('pointermove', windowHandler);
+			document.addEventListener('pointermove', documentHandler);
+			listenersActive = true;
+		} else if (!active && listenersActive) {
+			window.removeEventListener('pointermove', windowHandler);
+			document.removeEventListener('pointermove', documentHandler);
+			listenersActive = false;
+		}
+	}
+
+	document.getElementById('pointermove-toggle').addEventListener('change', (e) => {
+		toggleListeners(e.target.checked);
+	});
+
+	document.getElementById('shift-iframe-toggle').addEventListener('change', (e) => {
+		iframe.style.transform = e.target.checked ? 'translateX(500px)' : '';
+	});
+
+	const rectToggle = document.getElementById('rect-toggle');
+	const rectEventSelect = document.getElementById('rect-event');
+	const rect = document.getElementById('event-rect');
+	const colors = ['#88c0d0', '#bf616a', '#a3be8c', '#ebcb8b', '#b48ead', '#d08770'];
+	let colorIdx = 0;
+	let currentRectEvent = null;
+	const rectHandler = () => {
+		colorIdx = (colorIdx + 1) % colors.length;
+		rect.style.background = colors[colorIdx];
+	};
+	function syncRectListener() {
+		if (currentRectEvent) {
+			rect.removeEventListener(currentRectEvent, rectHandler);
+			currentRectEvent = null;
+		}
+		if (rectToggle.checked) {
+			currentRectEvent = rectEventSelect.value;
+			rect.addEventListener(currentRectEvent, rectHandler);
+		}
+	}
+	rectToggle.addEventListener('change', () => {
+		rect.style.display = rectToggle.checked ? 'block' : 'none';
+		syncRectListener();
+	});
+	rectEventSelect.addEventListener('change', syncRectListener);
 </script>
 </html>
