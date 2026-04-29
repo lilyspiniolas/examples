@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pointer/Mouse Event Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+    html, body {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: none;
+        -webkit-overflow-scrolling: auto;
+        position: fixed;
+    }
+    body {
+        font-family: -apple-system, system-ui, sans-serif;
+        padding: 20px;
+        max-width: 600px;
+        box-sizing: border-box;
+    }
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+    label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 6px;
+        font-family: monospace;
+    }
+    .hit-area {
+        margin-top: 16px;
+        padding: 40px;
+        background: #eef;
+        border: 2px dashed #88a;
+        border-radius: 8px;
+        text-align: center;
+        user-select: none;
+    }
+</style>
+</head>
+<body>
+<h1>Pointer/Mouse Event Test</h1>
+
+<div class="controls">
+    <label>
+        <input type="checkbox" id="preventDefaultToggle">
+        Call preventDefault() on events
+    </label>
+
+    <label>
+        Event pair:
+        <select id="eventPair">
+            <option value="down" selected>pointerdown + mousedown</option>
+            <option value="move">pointermove + mousemove</option>
+            <option value="up">pointerup + mouseup</option>
+        </select>
+    </label>
+
+    <label>
+        Last pointer event:
+        <input type="text" id="lastPointer" readonly>
+    </label>
+
+    <label>
+        Last mouse event:
+        <input type="text" id="lastMouse" readonly>
+    </label>
+</div>
+
+<div class="hit-area">Interact anywhere on the page</div>
+
+<script>
+    const preventDefaultToggle = document.getElementById('preventDefaultToggle');
+    const eventPair = document.getElementById('eventPair');
+    const lastPointer = document.getElementById('lastPointer');
+    const lastMouse = document.getElementById('lastMouse');
+
+    const eventMap = {
+        down: ['pointerdown', 'mousedown'],
+        move: ['pointermove', 'mousemove'],
+        up:   ['pointerup',   'mouseup'],
+    };
+
+    function handler(e) {
+        if (preventDefaultToggle.checked)
+            e.preventDefault();
+
+        const stamp = new Date().toLocaleTimeString('en-US', { hour12: false }) +
+                      '.' + String(Date.now() % 1000).padStart(3, '0');
+        const target = e.type.startsWith('pointer') ? lastPointer : lastMouse;
+        target.value = `${e.type} @ ${stamp}`;
+    }
+
+    let currentPair = [];
+
+    function installListeners(key) {
+        for (const name of currentPair)
+            document.removeEventListener(name, handler);
+
+        currentPair = eventMap[key];
+        for (const name of currentPair)
+            document.addEventListener(name, handler);
+    }
+
+    eventPair.addEventListener('change', () => installListeners(eventPair.value));
+    installListeners(eventPair.value);
+</script>
+</body>
+</html>
