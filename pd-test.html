@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset=utf-8>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+      body {
+          width: 2000px;
+          height: 2000px;
+      }
+      #target {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 200px;
+          height: 200px;
+          background: red;
+      }
+  </style>
+  </head>
+  <body>
+  <div id="target"></div>
+  <script>
+  'use strict';
+  document.addEventListener("touchstart", () => {}, { passive: true });
+  document.getElementById("target").addEventListener("pointerdown", event => event.preventDefault());
+  </script>
+  </body>
+  </html>
